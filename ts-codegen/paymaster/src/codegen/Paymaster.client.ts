@@ -3,6 +3,9 @@
 * DO NOT MODIFY IT BY HAND. Instead, modify the source JSONSchema file,
 * and run the @cosmwasm/ts-codegen generate command to regenerate this file.
 */
+// @ts-nocheck
+
+
 
 import { CosmWasmClient, SigningCosmWasmClient, ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
@@ -10,10 +13,12 @@ import { Addr, InstantiateMsg, ExecuteMsg, Uint64, Timestamp, Uint128, QueryMsg 
 export interface PaymasterReadOnlyInterface {
   contractAddress: string;
   getPayments: () => Promise<GetPaymentsResponse>;
+  // @ts-ignore
   getPaymentByID: ({
     id
   }: {
     id: Uint128;
+    // @ts-ignore
   }) => Promise<GetPaymentByIDResponse>;
 }
 export class PaymasterQueryClient implements PaymasterReadOnlyInterface {

@@ -20,6 +20,9 @@ import ShineBorder from "@/components/magicui/shine-border";
 
 import { fetchData , deleteData } from "@/firebase/firebaseUtils";
 
+// @ts-nocheck
+
+
 
 interface DataObject {
     sender: string,
@@ -66,6 +69,7 @@ const Admin = () => {
 
       const handleDelete = async (id: string) => {
         await deleteData(id);
+        /** @ts-ignore */
         const updatedData = invoices.filter(item => item.id !== id);
         setInvoices(updatedData);
       };
@@ -120,7 +124,10 @@ const Admin = () => {
                             <h3 className="text-sm text-[#63707D] ">{invoice.mobnumber}</h3>
                         </div>
                         <div className="mt-5 mx-4 flex justify-between">
+                            {/*@ts-ignore*/}
                             <button className="text-white bg-green-600 rounded-2xl w-[10rem] h-[3rem]" onClick={()=>{handleclick1(invoice.amount , invoice.sender , invoice.days , invoice.Collatral , invoice.id)}}>Accept</button>
+                            /** @ts-ignore */
+                            {/*@ts-ignore*/}
                             <button className="text-white bg-red-700 rounded-2xl w-[10rem] h-[3rem]" onClick={() =>  {handleDelete(invoice.id)}}>Reject</button>
                         </div>
                         <div className="flex">

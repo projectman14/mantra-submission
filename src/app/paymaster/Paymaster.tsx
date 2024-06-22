@@ -29,7 +29,7 @@ export default function Paymaster() {
     const addr1 = await GetPaymasterAccountInfo();
     const watchhow =await addr1.getPaymasterAddress({address : sender });
     console.log(watchhow);
-    setAddrs(sender);
+    setAddrs(watchhow);
   }
 
   useEffect(() => {
@@ -44,6 +44,7 @@ export default function Paymaster() {
     console.log(newfinal);
     console.log('sucess');
     setSender(sender);
+    Getaddrs();
   }
 
     // useEffect( () => {

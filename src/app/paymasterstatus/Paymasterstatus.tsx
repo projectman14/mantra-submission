@@ -19,11 +19,12 @@ import { LoanContract } from '../../../ts-codegen/dapp/src/codegen/LoanDatabase.
 import { GetLoanDetails, GetRemanigPayment, AcceptLoanPayment } from '../../../ts-codegen/dapp_loan_contract/src/index';
 import { GiveLoan, GetLoanContratAddress } from '../../../ts-codegen/dapp_loan_database/src/index';
 import { GetPaymasterAccountInfo, MakePayMasterAccount } from '../../../ts-codegen/paymasterfactorynew/src/index';
-import { GetPayment, SetAutopay } from '../../../ts-codegen/paymaster/src/index';
+import { GetPayment, SetAutopay, UpdatePaymaster, RemovePaymaster } from '../../../ts-codegen/paymaster/src/index';
 import Link from 'next/link'
 
 interface PayMaster {
-    paymentId: bigint;
+
+    payment_id: bigint;
     receiver: string;
     token_symbol: string;
     tokenAddress: string;
@@ -31,7 +32,7 @@ interface PayMaster {
     amount: bigint;
     frequency_in_days: number;
     next_payment_date: Date;
-  }
+}
 
 
 
@@ -42,7 +43,7 @@ const Paymasterstatus = () => {
     const [allowparams, setAllowparams] = useState(false);
     const [invoices, setInvoices] = useState<PayMaster[]>([]);
     const [contractArrayCopy, setContractArrayCopy] = useState<LoanContract[]>([]);
-    const [addrs , setAddrs] = useState('');
+    const [addrs, setAddrs] = useState('');
 
     useEffect(() => {
         window.keplr?.getKey("mantra-hongbai-1").then((keyInfo) => {
@@ -53,16 +54,16 @@ const Paymasterstatus = () => {
     }, []);
 
     async function Getaddrs() {
-        console.log(sender+'HEllo')
+        console.log(sender + 'HEllo')
         const addr1 = await GetPaymasterAccountInfo();
-        const watchhow =await addr1.getPaymasterAddress({address : sender });
+        const watchhow = await addr1.getPaymasterAddress({ address: sender });
         console.log(watchhow);
         setAddrs(watchhow);
-      }
+    }
 
     useEffect(() => {
         Getaddrs();
-    },[sender])
+    }, [sender])
 
     const ReturnArray = async () => {
         try {
@@ -112,11 +113,17 @@ const Paymasterstatus = () => {
     }, [sender, []]);
 
     const getNanosecondsTimestamp = () => {
-        const now = Date.now(); 
+        const now = Date.now();
         const highResTime = performance.now();
         const highResTimestamp = Math.floor((now * 1e6) + (highResTime * 1e3));
         return highResTimestamp;
     };
+
+    async function paymasterupdate() {
+        const updator = await UpdatePaymaster(addrs);
+        const updated = updator.updatePaymentStatus();
+        console.log(updated);
+    }
 
 
 
@@ -125,11 +132,21 @@ const Paymasterstatus = () => {
         const valuearray = await statuspaymaster.getPayments();
         console.log(valuearray.payments);
         setInvoices(valuearray.payments);
+        paymasterupdate();
     }
 
-    useEffect(()=>{
+    async function Removepayment(payid: any) {
+        const id = String(payid)
+        const Remover = await RemovePaymaster(addrs);
+        const removed = await Remover.removePayment({paymentId : id})
+        console.log(removed);
         getPaymasterstatus();
-    },[addrs])
+    }
+
+
+    useEffect(() => {
+        getPaymasterstatus();
+    }, [addrs])
 
 
     return (
@@ -159,10 +176,11 @@ const Paymasterstatus = () => {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">Contract Address</TableHead>
-                            <TableHead>Frequency</TableHead>
+                            <TableHead>Frequency In Days</TableHead>
                             <TableHead>Amount for Autopay</TableHead>
                             <TableHead>Next Payment Date</TableHead>
                             <TableHead>Token Used For Payment</TableHead>
+                            <TableHead>Remove Paymaster</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -180,6 +198,7 @@ const Paymasterstatus = () => {
                                     return `${day}/${month}/${year}`;
                                 })()}</TableCell>
                                 <TableCell className=' pl-[3.7rem] '>{invoice.token_symbol}</TableCell>
+                                <TableCell className=' pl-[3.7rem] '><Button onClick={() => Removepayment(invoice.payment_id)}>Remove</Button></TableCell>
                                 {/* <TableCell className="text-right"><Button className='w-[6rem]' disabled={invoice.status_code === '1'} onClick={() => { setautotranx(index) }}>{invoice.status_code === '0' ? "Setup Now" : "Paid"}</Button></TableCell> */}
                             </TableRow>
                         ))}

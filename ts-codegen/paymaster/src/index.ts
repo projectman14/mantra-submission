@@ -82,5 +82,22 @@ export async function getCosmWasmClient(
     return dinonum;
   }
 
+  export async function UpdatePaymaster(contractAddressdynamic:string) {
+    const address = "mantra1eqpxy66m8hr4v8njncg68p5melwlgq93kqt5nm";
+    const client = await getSigningCosmWasmClient("https://rpc.hongbai.mantrachain.io" , mnemonic , "mantra");
+
+    const dinonum = new PaymasterClient(client , address , contractAddressdynamic);
+
+    return dinonum;
+  }
+
+  export async function RemovePaymaster(contractAddressdynamic:string) {
+    const address = "mantra1eqpxy66m8hr4v8njncg68p5melwlgq93kqt5nm";
+    const client = await getSigningCosmWasmClient("https://rpc.hongbai.mantrachain.io" , mnemonic , "mantra");
+
+    const dinonum = new PaymasterClient(client , address , contractAddressdynamic);
+    return dinonum;
+  }
+
 
 

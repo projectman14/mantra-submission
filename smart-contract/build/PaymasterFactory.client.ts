@@ -4,6 +4,9 @@
 * and run the @oraichain/ts-codegen generate command to regenerate this file.
 */
 
+// @ts-nocheck
+
+
 import { CosmWasmClient, SigningCosmWasmClient, ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
 import {InstantiateMsg, ExecuteMsg, Addr, QueryMsg} from "./PaymasterFactory.types";

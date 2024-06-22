@@ -70,9 +70,9 @@ export interface LoanDatabaseInterface extends LoanDatabaseReadOnlyInterface {
   }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
 }
 export class LoanDatabaseClient extends LoanDatabaseQueryClient implements LoanDatabaseInterface {
-  client: SigningCosmWasmClient;
+  declare client: SigningCosmWasmClient;
   sender: string;
-  contractAddress: string;
+  declare contractAddress: string;
   constructor(client: SigningCosmWasmClient, sender: string, contractAddress: string) {
     super(client, contractAddress);
     this.client = client;

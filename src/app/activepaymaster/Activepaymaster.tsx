@@ -112,7 +112,7 @@ const Activepaymaster = () => {
         const amountval = amountEle.value;
         const frequencyval = frequencyEle.value;
         const settranx = await SetAutopay(addrs);
-        const finalwork = await settranx.addPayment({ amount: amountval, decimals: Number('6'), frequencyInDays: Number(frequencyval), tokenAddress: "mantra1pnh86g85r45er4egge6lhr0svu4nrga4ny7ax06wqgkjq8zgdjtsr7nzve", tokenSymbol: "PBK", receiver: contractArrayCopy[Contractindex].address, startDate: start_date });
+        const finalwork = await settranx.addPayment({ amount: amountval, decimals: Number('6'), frequencyInDays: Number(frequencyval), tokenAddress: "mantra1fs0hmqgwemluzjr4q5s3l4eatp3u0jcj2kjafmqrk3375armfd2ss84d9t", tokenSymbol: "PBK", receiver: contractArrayCopy[Contractindex].address, startDate: start_date });
         console.log(finalwork);
         frequencyEle.value = '';
         amountEle.value = '';

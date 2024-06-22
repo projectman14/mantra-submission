@@ -126,7 +126,7 @@ const Admin = () => {
                         <div className="mt-5 mx-4 flex justify-between">
                             {/*@ts-ignore*/}
                             <button className="text-white bg-green-600 rounded-2xl w-[10rem] h-[3rem]" onClick={()=>{handleclick1(invoice.amount , invoice.sender , invoice.days , invoice.Collatral , invoice.id)}}>Accept</button>
-                            /** @ts-ignore */
+                            {/** @ts-ignore */}
                             {/*@ts-ignore*/}
                             <button className="text-white bg-red-700 rounded-2xl w-[10rem] h-[3rem]" onClick={() =>  {handleDelete(invoice.id)}}>Reject</button>
                         </div>

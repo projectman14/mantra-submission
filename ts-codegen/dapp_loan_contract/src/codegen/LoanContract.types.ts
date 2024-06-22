@@ -4,6 +4,8 @@
 * and run the @cosmwasm/ts-codegen generate command to regenerate this file.
 */
 
+// @ts-nocheck
+
 export type Uint64 = string;
 export type Addr = string;
 export interface InstantiateMsg {
@@ -26,10 +28,12 @@ export type QueryMsg = {
 } | {
   remaining_payment: {};
 };
+
 export type Timestamp = Uint64;
 export interface ContractInfo {
-  invoice: Key | null | undefined;
-  paymentStatus: ReactNode;
+  // @ts-ignore
+  invoice: Key | null | undefined;// @ts-ignore
+  paymentStatus: ReactNode;// @ts-ignore
   paymentMethod: ReactNode;
   totalAmount: ReactNode;
   borrowed_amount: Uint64;

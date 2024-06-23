@@ -1,7 +1,7 @@
 # Token Land
 
 #### Overview
-* Cosmos based CDP (collateral debt  protocol) with paymaster implementation to reduce gas fees.
+* Cosmos based CDP (collateral debt  protocol) with paymaster implementation for automated loan payments and gas optimization.
 * Automated loan smart contracts which can accept payment from any token.
 * Stake RWAs as collateral for loans.
 * We've used ts code-gen to streamline building the frontend process.

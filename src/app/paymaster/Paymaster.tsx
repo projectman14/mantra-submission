@@ -12,6 +12,7 @@ export default function Paymaster() {
 
   const [sender, setSender] = useState('');
   const [addrs, setAddrs] = useState('no');
+  const [allowWork , setAllowWork] = useState(false);
 
   useEffect(() => {
     window.keplr?.getKey("mantra-hongbai-1").then((keyInfo) => {
@@ -36,14 +37,16 @@ export default function Paymaster() {
     // const addr1 = await GetPaymasterAccountInfo();
     Getaddrs();
     
-  }, [sender , []])
+  }, [sender , [] , allowWork])
 
   async function makeone(walletaddress:string){
     const finalfn = await MakePayMasterAccount();
-    const newfinal = finalfn.mintPaymasterAccount({address: walletaddress});
+    const newfinal = await finalfn.mintPaymasterAccount({address: walletaddress});
     console.log(newfinal);
     console.log('sucess');
     setSender(sender);
+    setAllowWork(true);
+    // window.location.reload
     Getaddrs();
   }
 

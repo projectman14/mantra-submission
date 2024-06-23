@@ -36,11 +36,15 @@
 
 * Go to homepage and click on `PayMaster`
 * Click on `Get Me One` to setup paymaster for your loans.
+* Now send the CW20 token you want to pay with to your paymaster, whose contract address is given on page. *For current demonstration purposes, paymaster only supports CW20 token with decimals set to 6 right now and assumes each token to be worth 1 dollar* 
+* Fill in token address and symbol of the CW20 token.
 * Enter the amount to auto pay and its frequency.
 * Click on `Setup Now` and wait a few sec for it to set up.
 * Click on `TokenLand Paymaster` at top of screen to go back.
 * Click on `PayMaster Status` to view the list of your pay masters.
 * You can remove it by clicking on `Remove` button.
+
+You can check the payment done by paymaster in the `List Loan Status` Page. Paymaster payment will fail if it has not been given enough tokens.
 
 ### Contract Addresses for reference
 

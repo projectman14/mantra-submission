@@ -1,6 +1,6 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint64, Addr, WasmMsg, SubMsg};
+use cosmwasm_std::{to_json_binary, Uint128, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint64, Addr, WasmMsg, SubMsg};
 use cw2::set_contract_version;
 use cosmwasm_schema::cw_serde;
 
@@ -59,6 +59,7 @@ pub fn execute(
     match msg{
         ExecuteMsg::AcceptPayment { payment } => execute::accept_payment(deps, env, payment),
         ExecuteMsg::UpdateStatus {  } => execute::update_status(deps, env),
+        ExecuteMsg::Receive { sender : _, amount , msg : _ } => execute::receive(deps, env, amount), //msg variable is set to be used in the future
     }
 }
 
@@ -123,6 +124,7 @@ pub mod execute{
     pub fn update_status(deps : DepsMut, env : Env) -> Result<Response, ContractError> {
         let contract_info = CONTRACT_INFO.load(deps.storage)?;
 
+        //Only the loan contract itself can change status
         if contract_info.status_code == Uint64::new(0) {
 
             if env.block.time >= contract_info.expiration_date {
@@ -175,6 +177,16 @@ pub mod execute{
 
         Ok(())
     }
+
+    pub fn receive(deps : DepsMut, env : Env, amount : Uint128) -> Result<Response, ContractError> {
+        let base : u64 = 10;
+        let payment = Uint64::new((amount.u128() as u64)/ base.pow(6)); // CW20 contract sends raw amount of tokens so need to divide it by decimals
+        //As price of 1 token (after including decimal calculation) is 1 dollar
+
+        //This token information is planned to be set using the msg later
+
+        accept_payment(deps, env, payment)
+    }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -195,6 +207,7 @@ pub mod query{
     pub fn remaining_payment(deps : Deps, env : Env) -> StdResult<Uint64>{
         let contract_info = CONTRACT_INFO.load(deps.storage)?;
 
+        //Currently working only with Simple Interest, plan to move it to Compound Interest
         let diff_year = Uint64::new((contract_info.expiration_date.seconds() - env.block.time.seconds()) / 31536000);
 
         let max_pay = contract_info.borrowed_amount + ((contract_info.borrowed_amount * contract_info.interest * diff_year) / Uint64::new(100)) - contract_info.currently_paid;

@@ -1,5 +1,5 @@
 use cosmwasm_schema::{cw_serde, QueryResponses};
-use cosmwasm_std::{Addr, Uint64};
+use cosmwasm_std::{Addr, Uint64, Uint128, Binary};
 
 use crate::state::ContractInfo;
 
@@ -17,6 +17,7 @@ pub struct InstantiateMsg {
 pub enum ExecuteMsg {
     AcceptPayment { payment : Uint64},
     UpdateStatus {},
+    Receive { sender : String, amount : Uint128, msg : Binary }, //Implements receiver interface for CW20 Receiver
 }
 
 #[cw_serde]

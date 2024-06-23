@@ -51,6 +51,8 @@ pub mod execute{
     use super::*;
 
     pub fn add_payment(deps : DepsMut, receiver : Addr, token_symbol : String, token_address : Addr, decimals : u32, amount : Uint64, start_date : Timestamp, frequency_in_days : u64 ) -> Result<Response, ContractError> {
+
+        //Each payment is given an ID for easy removal when needed, also helps to show number of payments created
         let mut id = PAYMENTID.load(deps.storage)?;
 
         let payment = PayMaster{
@@ -141,14 +143,17 @@ pub mod execute{
     }
 
     pub fn update_payment_status(deps : DepsMut, env : Env) -> Result<Response, ContractError>{
-        let payment_info = PAYMASTERS.load(deps.storage)?;
+        let mut payment_info = PAYMASTERS.load(deps.storage)?;
 
         let mut update_vec : Vec<SubMsg> = vec![];
 
-        for pay in payment_info.iter() {
+        for pay in payment_info.iter_mut() {
             if env.block.time >= pay.next_payment_date {
 
                 /*
+
+                // For any CW20 token whose price can be fetched by the Oracle
+
                 let stock_price_request = QueryRequest::Wasm(
                     WasmQuery::Smart {
                         contract_addr : "mantra1q44nqkfcude7je0tqhu0u8mm7x8uhgj73n94k2vkx87tsr6yaujsdu3s4a".to_string(),
@@ -160,6 +165,8 @@ pub mod execute{
 
                 let stock_price : PriceResponse = deps.querier.query(&stock_price_request)?;
                 */
+
+                // Currently we just assume price to be 1 dollar per token
 
                 let stock_price : PriceResponse = PriceResponse{
                     price : 1,
@@ -173,6 +180,7 @@ pub mod execute{
 
                 let token_amount = Uint128::new((pay.amount.u64() * base.pow(expo) * base.pow(pay.decimals)) as u128)/Uint128::new(price as u128);
 
+                // Just sample message
                 let accept_payment = AcceptPayment{
                     payment : pay.amount,
                 };
@@ -185,15 +193,20 @@ pub mod execute{
                     send : Send {
                         contract : pay.receiver.to_string(),
                         amount : token_amount,
-                        msg : to_json_binary(&payment_msg)?,
+                        msg : to_json_binary(&payment_msg)?, // For now this message plays no role, but will be used later
+                                                                    // to send token information
                     }
                 };
 
                 let sub_msg  = SubMsg::new(WasmMsg::Execute { contract_addr: pay.token_address.to_string(), msg: to_json_binary(&send_msg)?, funds: vec![] });
 
-                update_vec.push(sub_msg)
+                update_vec.push(sub_msg);
+
+                (*pay).next_payment_date = (*pay).next_payment_date.plus_days(pay.frequency_in_days);
             }
         }
+
+        PAYMASTERS.save(deps.storage, &payment_info)?;
 
         Ok(Response::new().add_submessages(update_vec))
     }

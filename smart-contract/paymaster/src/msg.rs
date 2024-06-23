@@ -11,7 +11,7 @@ pub struct InstantiateMsg {
 pub enum ExecuteMsg {
     AddPayment{ receiver : Addr, token_address : Addr, token_symbol : String, decimals : u32, amount : Uint64, start_date : Timestamp, frequency_in_days : u64},
     RemovePayment{ payment_id : Uint128},
-    UpdatePaymentStatus { },
+    UpdatePaymentStatus { },  //Must be run periodically for paymaster to execute UserOperations when needed
 }
 
 #[cw_serde]

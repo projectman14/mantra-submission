@@ -19,9 +19,12 @@ import { ContractInfo } from '../../../ts-codegen/dapp_loan_contract/src/codegen
 import { LoanContract } from '../../../ts-codegen/dapp_loan_database/src/codegen/LoanDatabase.types';
 import ShineBorder from "@/components/magicui/shine-border";
 import Link from "next/link";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 const TableSection = () => {
     const icon: IconProp = faClock;
+    const { toast } = useToast();
     const [sender, setSender] = useState("");
     const [allowparams, setAllowparams] = useState(false);
     const [invoices, setInvoices] = useState<ContractInfo[]>([]);
@@ -80,9 +83,20 @@ const TableSection = () => {
             .catch((error) => {
                 console.error("Error in ReturnArray:", error);
             });
-    }, [sender , []]);
+    }, [sender, []]);
+
+    function toastApper() {
+        toast({
+            title: "Loan is beign Paid",
+            description: "PLease wait. Loan is beign paid ",
+            action: (
+                <ToastAction altText="Goto schedule to undo">Ok</ToastAction>
+            ),
+        })
+    }
 
     const repayAmount = async (contractAddress: string, inputId: string) => {
+        toastApper();
         const paymentvalueElement = document.getElementById(inputId) as HTMLInputElement;
         const paymentvalue = paymentvalueElement.value;
         const accpayment = await AcceptLoanPayment(contractAddress);
@@ -171,7 +185,7 @@ const TableSection = () => {
                                     <Image src={USDC} alt="" className="h-6 w-[5rem] mt-2 -ml-4" />
                                     <h3 className="mt-[0.6rem] text-sm font-medium -ml-5">USDC</h3>
                                 </div>
-                                <input placeholder={invoice.status_code == '0' ?`$${Number(invoice.borrowed_amount) - Number(invoice.currently_paid)} Remaning` : 'Loan Paid Successfully'} className="ml-4 focus:outline-none focus:ring-0" id={`repay_amount_new_${index}`} />
+                                <input placeholder={invoice.status_code == '0' ? `$${Number(invoice.borrowed_amount) - Number(invoice.currently_paid)} Remaning` : 'Loan Paid Successfully'} className="ml-4 focus:outline-none focus:ring-0" id={`repay_amount_new_${index}`} />
                             </div>
                             <div className="mt-3 mx-4">
                                 <button

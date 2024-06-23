@@ -22,10 +22,14 @@ import { GetPaymasterAccountInfo, MakePayMasterAccount } from '../../../ts-codeg
 import { GetPayment, SetAutopay } from '../../../ts-codegen/paymaster/src/index';
 import Link from 'next/link'
 
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
+
 
 
 
 const Activepaymaster = () => {
+    const { toast } = useToast()
 
     const [sender, setSender] = useState("");
     const [allowparams, setAllowparams] = useState(false);
@@ -94,28 +98,45 @@ const Activepaymaster = () => {
         return highResTimestamp;
     };
 
-    const [addrs , setAddrs] = useState('');
-    useEffect(()=>{
+    const [addrs, setAddrs] = useState('');
+    useEffect(() => {
         const addr1 = GetPaymasterAccountInfo();
         addr1.then((info2) => {
-            const finaladdr = info2.getPaymasterAddress({address:sender});
+            const finaladdr = info2.getPaymasterAddress({ address: sender });
             finaladdr.then((info3) => {
                 setAddrs(info3);
             })
         })
-    },[sender])
+    }, [sender])
+
+    function toastApper () {
+        toast({
+            title: "Setting Up Paymaster ...",
+            description: "PLease wait. Paymaster is beign set . ",
+            action: (
+              <ToastAction altText="Goto schedule to undo">Ok</ToastAction>
+            ),
+          })
+    }
 
     async function setautotranx(Contractindex: any) {
         const start_date: string = String(getNanosecondsTimestamp());
         const amountEle = document.getElementById(`repay_amount_new_${Contractindex}`) as HTMLInputElement;
         const frequencyEle = document.getElementById(`frequency_${Contractindex}`) as HTMLInputElement;
+        const TokenaddrsEle = document.getElementById(`tokenAddress_${Contractindex}`) as HTMLInputElement;
+        const SymbolTokenEle = document.getElementById(`symbolToken_${Contractindex}`) as HTMLInputElement;
         const amountval = amountEle.value;
         const frequencyval = frequencyEle.value;
+        const Tokenval = TokenaddrsEle.value;
+        const Symbolval = SymbolTokenEle.value;
+        toastApper();
         const settranx = await SetAutopay(addrs);
-        const finalwork = await settranx.addPayment({ amount: amountval, decimals: Number('6'), frequencyInDays: Number(frequencyval), tokenAddress: "mantra1fs0hmqgwemluzjr4q5s3l4eatp3u0jcj2kjafmqrk3375armfd2ss84d9t", tokenSymbol: "PBK", receiver: contractArrayCopy[Contractindex].address, startDate: start_date });
+        const finalwork = await settranx.addPayment({ amount: amountval, decimals: Number('6'), frequencyInDays: Number(frequencyval), tokenAddress: Tokenval, tokenSymbol: Symbolval, receiver: contractArrayCopy[Contractindex].address, startDate: start_date });
         console.log(finalwork);
         frequencyEle.value = '';
         amountEle.value = '';
+        TokenaddrsEle.value = '';
+        SymbolTokenEle.value = '';
     }
 
 
@@ -140,6 +161,15 @@ const Activepaymaster = () => {
             >
                 Setup PayMaster For a Loan
             </h1>
+            <p className="mt-6 animate-fade-up text-center text-gray-500 [text-wrap:balance] md:text-xl"
+                style={{
+                    animationDelay: "0.25s",
+                    animationFillMode: "forwards",
+                }}
+            >
+                Before Setting Up Paymaster For a loan ensure that you have sent the token to your paymaster address given below
+            </p>
+            <p className='animate-fade-up text-center mt-2 font-medium'>{addrs}</p>
             <div className='w-[80rem] mx-auto mt-[4rem]'>
                 <Table className='z-20'>
                     {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
@@ -149,6 +179,8 @@ const Activepaymaster = () => {
                             <TableHead>Loan End Date</TableHead>
                             <TableHead>Amount for Autopay</TableHead>
                             <TableHead>Frequency</TableHead>
+                            <TableHead>Token Address</TableHead>
+                            <TableHead>Token Symbol</TableHead>
                             <TableHead>Remaning Amount</TableHead>
                             <TableHead className="text-right pr-4">Click To Setup</TableHead>
                         </TableRow>
@@ -165,8 +197,10 @@ const Activepaymaster = () => {
                                     const year = date.getFullYear();
                                     return `${day}/${month}/${year}`;
                                 })()}</TableCell>
-                                <TableCell><Input placeholder='Token Amount' className='w-[10rem]' id={`repay_amount_new_${index}`} /></TableCell>
+                                <TableCell><Input placeholder='Enter Amount' className='w-[10rem]' id={`repay_amount_new_${index}`} /></TableCell>
                                 <TableCell><Input placeholder='Frequency' className='w-[10rem]' id={`frequency_${index}`} /></TableCell>
+                                <TableCell><Input placeholder='Token Address' className='w-[10rem]' id={`tokenAddress_${index}`} /></TableCell>
+                                <TableCell><Input placeholder='Token Symbol' className='w-[10rem]' id={`symbolToken_${index}`} /></TableCell>
                                 <TableCell className=' pl-[3.7rem] '>{Number(invoice.borrowed_amount) - Number(invoice.currently_paid)}</TableCell>
                                 <TableCell className="text-right"><Button className='w-[6rem]' disabled={invoice.status_code === '1'} onClick={() => { setautotranx(index) }}>{invoice.status_code === '0' ? "Setup Now" : "Paid"}</Button></TableCell>
                             </TableRow>

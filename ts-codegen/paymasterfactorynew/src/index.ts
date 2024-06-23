@@ -12,7 +12,7 @@ import { PaymasterfactorynewClient , PaymasterfactorynewQueryClient } from './co
 
 
 const mnemonic = "fuel grunt humor output offer box bridge hover motor code spoon token have order grief medal sport bulk corn pave market insane access urge"; //your memonic
-const contractAddress = "mantra17924kwe6xt2g9x3x7tych8t9m6hqys0a72mfrm7hjtvpk5kzd6pqazl574";
+const contractAddress = "mantra12he2zga68ruefvzpftkxqudnjgq9erfsh9pvaud0ja24xgf3pxsqkc3jtv";
 
 async function connect() {
 

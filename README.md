@@ -50,7 +50,7 @@ You can check the payment done by paymaster in the `List Loan Status` Page. Paym
 
 * Database Address: `mantra19u9j7yhj4ueqmnnw8xzw6ppxs4egugzuvljqqtx5ksrzfcaqp3uqxnrqpz`
 * Cipher(CPR) coin Address: `mantra1lm9fah5umqde5vyppeleklk48j6s7t73psrerkr9n39gr5uman6q5v2qfj`
-* Paymaster factory Address: `mantra163dn7sa2385k95p5ujjwv5vqazw3lgsghpatmtlchdcmnj6zfvgs8nk46q`
+* Paymaster factory Address: `mantra12he2zga68ruefvzpftkxqudnjgq9erfsh9pvaud0ja24xgf3pxsqkc3jtv`
 * PBK token Address: `mantra1fs0hmqgwemluzjr4q5s3l4eatp3u0jcj2kjafmqrk3375armfd2ss84d9t`
   
 #### How our PayMaster works?

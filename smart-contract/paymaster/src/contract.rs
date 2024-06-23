@@ -143,11 +143,11 @@ pub mod execute{
     }
 
     pub fn update_payment_status(deps : DepsMut, env : Env) -> Result<Response, ContractError>{
-        let payment_info = PAYMASTERS.load(deps.storage)?;
+        let mut payment_info = PAYMASTERS.load(deps.storage)?;
 
         let mut update_vec : Vec<SubMsg> = vec![];
 
-        for pay in payment_info.iter() {
+        for pay in payment_info.iter_mut() {
             if env.block.time >= pay.next_payment_date {
 
                 /*
@@ -200,9 +200,13 @@ pub mod execute{
 
                 let sub_msg  = SubMsg::new(WasmMsg::Execute { contract_addr: pay.token_address.to_string(), msg: to_json_binary(&send_msg)?, funds: vec![] });
 
-                update_vec.push(sub_msg)
+                update_vec.push(sub_msg);
+
+                (*pay).next_payment_date = (*pay).next_payment_date.plus_days(pay.frequency_in_days);
             }
         }
+
+        PAYMASTERS.save(deps.storage, &payment_info)?;
 
         Ok(Response::new().add_submessages(update_vec))
     }

@@ -6,6 +6,8 @@
 * Stake RWAs as collateral for loans.
 * We've used ts code-gen to streamline building the frontend process.
 
+*It is recommended to wait at least 3 seconds after clicking any button as it takes time for smart contracts to do the needed actions*
+
 #### System Design (how it works)
 ![architecture design](./public/system-design-readme.png/ "architecture design")
 
@@ -35,10 +37,11 @@
 ##### Using our Paymaster
 
 * Go to homepage and click on `PayMaster`
+* When using for the first time, you will have to make a paymaster account by clicking on `First Setup Paymaster`. Wait for some time till the buttons change.
 * Click on `Get Me One` to setup paymaster for your loans.
 * Now send the CW20 token you want to pay with to your paymaster, whose contract address is given on page. *For current demonstration purposes, paymaster only supports CW20 token with decimals set to 6 right now and assumes each token to be worth 1 dollar* 
 * Fill in token address and symbol of the CW20 token.
-* Enter the amount to auto pay and its frequency.
+* Enter the amount (in dollars) to auto pay and its frequency.
 * Click on `Setup Now` and wait a few sec for it to set up.
 * Click on `TokenLand Paymaster` at top of screen to go back.
 * Click on `PayMaster Status` to view the list of your pay masters.
@@ -55,4 +58,4 @@ You can check the payment done by paymaster in the `List Loan Status` Page. Paym
   
 #### How our PayMaster works?
 
-By decoupling gas fees from users, paymasters facilitate smoother onboarding, especially for newcomers, and enable more complex transaction scenarios, such as those involving meta-transactions. Currently our pay master works on PBK token which is cw20 base token but we will be extending it to work with any token of user's choice.
+By decoupling gas fees from users, paymasters facilitate smoother onboarding, especially for newcomers, and enable more complex transaction scenarios, such as those involving meta-transactions. The user can currently fill in token address and symbol of a CW20 token of their choice whose decimals is set to 6, which will currently be priced at, for demonstration purposes, 1 token = 1 dollar. 

@@ -24,7 +24,7 @@
 * Add our Cipher(CPR) token which is a cw20 token by selecting add token option in Keplr wallet.
 * Select MANTRA Hongbai Testnet from dropdown options and add token using this contract address `mantra1lm9fah5umqde5vyppeleklk48j6s7t73psrerkr9n39gr5uman6q5v2qfj`
 * Once CPR token has been added click on `Borrow Token` button and fill up your loan details form.
-* Click on `Apply For Loan` once all details have been filled.
+* Click on `Borrow Token` once all details have been filled.
 * Go to admin dashboard https://tokenland.vercel.app/admin
 * Admin dashboard displays list of all pending loan approvals.
 * Accept or Reject the loan.
